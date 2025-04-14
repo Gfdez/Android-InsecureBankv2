@@ -64,8 +64,8 @@ public class DoTransfer extends Activity {
 	EditText amount;
 	/*The EditText that takes the Phone number as input from the user. A confirmation of 
 	successful transfer is sent to this phone number*/
-	EditText phoneNumber;
-	String number = "5554";
+	//EditText phoneNumber;
+	//String number = "5554";
 	//	The Button that handles the from and to account autofill operation on the basis of logged in user
 	Button getAccounts;
 	//	The Button that handles the transfer operation activity
