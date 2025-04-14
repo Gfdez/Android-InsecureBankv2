@@ -34,7 +34,7 @@ public class LoginActivity extends Activity {
 	//	The Button that calls the authentication function
 	Button login_buttons;
     //	The Button that calls the create user function
-    Button createuser_buttons;
+    //Button createuser_buttons;
     //	The EditText that holds the username entered by the user
 	EditText Username_Text;
 	//	The EditText that holds the password entered by the user
@@ -59,11 +59,11 @@ public class LoginActivity extends Activity {
 			// return;
 		}
 		
-		String mess = getResources().getString(R.string.is_admin);
-		if (mess.equals("no")) {
-			View button_CreateUser = findViewById(R.id.button_CreateUser);
-			button_CreateUser.setVisibility(View.GONE);
-		}
+		//String mess = getResources().getString(R.string.is_admin);
+		//if (mess.equals("no")) {
+		//	View button_CreateUser = findViewById(R.id.button_CreateUser);
+		//	button_CreateUser.setVisibility(View.GONE);
+		//}
 		login_buttons = (Button) findViewById(R.id.login_button);
 		login_buttons.setOnClickListener(new View.OnClickListener() {
 
@@ -73,14 +73,14 @@ public class LoginActivity extends Activity {
                 performlogin();
             }
         });
-        createuser_buttons = (Button) findViewById(R.id.button_CreateUser);
-        createuser_buttons.setOnClickListener(new View.OnClickListener() {
+        //createuser_buttons = (Button) findViewById(R.id.button_CreateUser);
+        //createuser_buttons.setOnClickListener(new View.OnClickListener() {
 
-            @Override
-            public void onClick(View v) {
+         //   @Override
+        //    public void onClick(View v) {
                 // TODO Auto-generated method stub
-                createUser();
-            }
+          //      createUser();
+           // }
         });
 
         try {
