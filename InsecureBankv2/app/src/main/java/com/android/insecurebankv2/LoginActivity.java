@@ -49,6 +49,16 @@ public class LoginActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_log_main);
+		
+		// Verificar integridad de la aplicación
+		if (!SignatureVerifier.isSecureEnvironment(this)) {
+			Toasteroid.show(this, "Aplicación posiblemente alterada. Se recomienda reinstalar desde una fuente confiable.", 
+			                Toasteroid.STYLES.ERROR, Toasteroid.LENGTH_LONG);
+			// Opcionalmente podemos terminar la aplicación aquí si queremos ser más estrictos
+			// finish();
+			// return;
+		}
+		
 		String mess = getResources().getString(R.string.is_admin);
 		if (mess.equals("no")) {
 			View button_CreateUser = findViewById(R.id.button_CreateUser);
@@ -86,8 +96,6 @@ public class LoginActivity extends Activity {
         } catch (InvalidAlgorithmParameterException e) {
             e.printStackTrace();
         } catch (IllegalBlockSizeException e) {
-            e.printStackTrace();
-        } catch (BadPaddingException e) {
             e.printStackTrace();
         }
 //		fillData_button = (Button) findViewById(R.id.fill_data);

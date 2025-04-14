@@ -58,7 +58,8 @@ public class DoLogin extends Activity {
 	public static final String MYPREFS = "mySharedPreferences";
 	String serverip = "";
 	String serverport = "";
-	String protocol = "http://";
+	// Cambiado de HTTP a HTTPS para comunicaciones seguras
+	String protocol = "https://";
 	BufferedReader reader;
 	SharedPreferences serverDetails;
 
@@ -109,21 +110,13 @@ public class DoLogin extends Activity {
 
 		public void postData(String valueIWantToSend) throws ClientProtocolException, IOException, JSONException, InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, InvalidAlgorithmParameterException, IllegalBlockSizeException, BadPaddingException {
 
-
-
 			// Create a new HttpClient and Post Header
-
 			HttpClient httpclient = new DefaultHttpClient();
 			HttpPost httppost = new HttpPost(protocol + serverip + ":" + serverport + "/login");
 			HttpPost httppost2 = new HttpPost(protocol + serverip + ":" + serverport + "/devlogin");
 
 			// Add your data
 			List < NameValuePair > nameValuePairs = new ArrayList < NameValuePair > (2);
-
-			//                Delete below test accounts in production
-			//                nameValuePairs.add(new BasicNameValuePair("username", "jack"));
-			//                nameValuePairs.add(new BasicNameValuePair("password", "jack@123$"));
-
 			nameValuePairs.add(new BasicNameValuePair("username", username));
 			nameValuePairs.add(new BasicNameValuePair("password", password));
 			HttpResponse responseBody;
@@ -142,13 +135,23 @@ public class DoLogin extends Activity {
 			result = result.replace("\n", "");
 			if (result != null) {
 				if (result.indexOf("Correct Credentials") != -1) {
-					Log.d("Successful Login:", ", account=" + username + ":" + password);
-					saveCreds(username, password);
+					// Usando el nuevo sistema de logs seguro, sin exponer credenciales
+					SecureLogger.i("DoLogin", "Autenticación exitosa para usuario");
+					SecureLogger.sensitiveInfo("DoLogin", "Login para: " + username);
+					
+					// Generar y guardar token JWT en lugar de las credenciales
+					JWTManager jwtManager = new JWTManager(getApplicationContext());
+					String token = jwtManager.generateToken(username);
+					
+					// Guardar información básica del usuario de manera segura (solo el username, no la contraseña)
+					saveUserInfo(username);
+					
 					trackUserLogins();
 					Intent pL = new Intent(getApplicationContext(), PostLogin.class);
 					pL.putExtra("uname", username);
 					startActivity(pL);
 				} else {
+					SecureLogger.w("DoLogin", "Intento de login fallido");
 					Intent xi = new Intent(getApplicationContext(), WrongLogin.class);
 					startActivity(xi);
 				}
@@ -177,23 +180,21 @@ public class DoLogin extends Activity {
 		}
 
 		/*
-		The function that saves the credentials locally for future reference
+		The function that saves the user information locally for future reference
 		username: username entered by the user
-		password: password entered by the user
 		*/
-		private void saveCreds(String username, String password) throws UnsupportedEncodingException, InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, InvalidAlgorithmParameterException, IllegalBlockSizeException, BadPaddingException {
-			// TODO Auto-generated method stub
+		private void saveUserInfo(String username) throws UnsupportedEncodingException, InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, InvalidAlgorithmParameterException, IllegalBlockSizeException, BadPaddingException {
+			// Almacenar solo la información básica necesaria para el funcionamiento de la app
 			SharedPreferences mySharedPreferences;
 			mySharedPreferences = getSharedPreferences(MYPREFS, Activity.MODE_PRIVATE);
 			SharedPreferences.Editor editor = mySharedPreferences.edit();
 			rememberme_username = username;
-			rememberme_password = password;
 			String base64Username = new String(Base64.encodeToString(rememberme_username.getBytes(), 4));
-			CryptoClass crypt = new CryptoClass();;
-			superSecurePassword = crypt.aesEncryptedString(rememberme_password);
 			editor.putString("EncryptedUsername", base64Username);
-			editor.putString("superSecurePassword", superSecurePassword);
 			editor.commit();
+			
+			// Ya no almacenamos la contraseña, utilizamos JWT para autenticación
+			SecureLogger.i("DoLogin", "Información de usuario almacenada de forma segura");
 		}
 
 		private String convertStreamToString(InputStream in ) throws IOException {

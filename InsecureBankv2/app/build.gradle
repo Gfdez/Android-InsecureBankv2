@@ -24,6 +24,12 @@ dependencies {
     // compile 'com.android.support:appcompat-v7:22.2.0'
     implementation 'com.google.android.gms:play-services:7.5.0'
     implementation 'com.github.marcohc:Toasteroid:2.1.4'
+    
+    // JWT para implementar autenticación segura basada en tokens
+    implementation 'com.auth0.android:jwtdecode:2.0.0'
+    implementation 'io.jsonwebtoken:jjwt-api:0.11.2'
+    implementation 'io.jsonwebtoken:jjwt-impl:0.11.2'
+    implementation 'io.jsonwebtoken:jjwt-jackson:0.11.2'
 }
 
 repositories {

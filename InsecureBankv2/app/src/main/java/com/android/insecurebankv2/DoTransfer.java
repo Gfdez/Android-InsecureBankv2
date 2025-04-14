@@ -37,6 +37,7 @@ import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.util.Base64;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -75,7 +76,8 @@ public class DoTransfer extends Activity {
 	InputStream in ;
 	String serverip = "";
 	String serverport = "";
-	String protocol = "http://";
+	// Cambiado de HTTP a HTTPS para comunicaciones seguras
+	String protocol = "https://";
 	Button button1;
 	SharedPreferences serverDetails;
 	public static final String MYPREFS2 = "mySharedPreferences";
@@ -130,6 +132,26 @@ public class DoTransfer extends Activity {
 			str = "dinesh";
 			HttpClient httpclient = new DefaultHttpClient();
 			HttpPost httppost = new HttpPost(protocol + serverip + ":" + serverport + "/dotransfer");
+			
+			// Obtener el token JWT en lugar de las credenciales
+			JWTManager jwtManager = new JWTManager(getApplicationContext());
+			String token = jwtManager.getToken();
+			
+			// Si no hay token válido, no se puede proceder
+			if (token == null) {
+				runOnUiThread(new Runnable() {
+					@Override
+					public void run() {
+						Toasteroid.show(DoTransfer.this, "Sesión expirada. Por favor, inicie sesión nuevamente", 
+						                Toasteroid.STYLES.ERROR, Toasteroid.LENGTH_SHORT);
+						Intent loginIntent = new Intent(getApplicationContext(), LoginActivity.class);
+						startActivity(loginIntent);
+						finish();
+					}
+				});
+				return str;
+			}
+			
 			SharedPreferences settings = getSharedPreferences(MYPREFS2, 0);
 			final String username = settings.getString("EncryptedUsername", null);
 			byte[] usernameBase64Byte = Base64.decode(username, Base64.DEFAULT);
@@ -138,18 +160,12 @@ public class DoTransfer extends Activity {
 			} catch (UnsupportedEncodingException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+				return str;
 			}
-			final String password = settings.getString("superSecurePassword", null);
-			try {
-				//	Stores the decrypted form of the password from the locally stored shared preference file
-				passNormalized = getNormalizedPassword(password);
-			} catch (InvalidKeyException | UnsupportedEncodingException | NoSuchAlgorithmException | NoSuchPaddingException | InvalidAlgorithmParameterException | IllegalBlockSizeException | BadPaddingException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-			List < NameValuePair > nameValuePairs = new ArrayList < NameValuePair > (5);
-			nameValuePairs.add(new BasicNameValuePair("username", usernameBase64ByteString));
-			nameValuePairs.add(new BasicNameValuePair("password", passNormalized));
+			
+			// Crear parámetros para la solicitud usando el token JWT en lugar de contraseña
+			List < NameValuePair > nameValuePairs = new ArrayList < NameValuePair > (4);
+			nameValuePairs.add(new BasicNameValuePair("token", token));
 			from = (EditText) findViewById(R.id.editText_from);
 			to = (EditText) findViewById(R.id.editText_to);
 			amount = (EditText) findViewById(R.id.editText_amount);
@@ -157,7 +173,7 @@ public class DoTransfer extends Activity {
 			nameValuePairs.add(new BasicNameValuePair("to_acc", to.getText().toString()));
 			nameValuePairs.add(new BasicNameValuePair("amount", amount.getText().toString()));
 			try {
-				//	The HTTP Post of the credentials plus the transaction information
+				//	The HTTP Post of the token plus the transaction information
 				httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
 			} catch (UnsupportedEncodingException e) {
 				// TODO Auto-generated catch block
@@ -202,12 +218,14 @@ public class DoTransfer extends Activity {
 								try {
 									//	Captures the successful transaction status for Transaction history tracking
 									String MYFILE = Environment.getExternalStorageDirectory() + "/Statements_" + usernameBase64ByteString + ".html";
-									BufferedWriter out2 = new BufferedWriter(new FileWriter(MYFILE, true));
-									out2.write(status);
-                                    out2.write("<hr>");
-									out2.close();
-								} catch (IOException e) {
-									e.toString();
+									
+									// Usar el nuevo sistema de cifrado de archivos para guardar la transacción
+									FileEncryption fileEncryption = new FileEncryption(getApplicationContext());
+									fileEncryption.appendEncryptedContent(MYFILE, status + "<hr>");
+									
+									Log.d("DoTransfer", "Transacción exitosa guardada de forma segura");
+								} catch (Exception e) {
+									Log.e("DoTransfer", "Error guardando transacción: " + e.getMessage());
 								}
 							} catch (JSONException e) {
 								// TODO Auto-generated catch block
