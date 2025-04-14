@@ -161,8 +161,8 @@ public class ChangePassword extends Activity {
 									jsonObject = new JSONObject(result);
 									String login_response_message = jsonObject.getString("message");
 									Toast.makeText(getApplicationContext(), login_response_message + ". Restart application to Continue.", Toast.LENGTH_LONG).show();
-                                    TelephonyManager phoneManager = (TelephonyManager)getApplicationContext().getSystemService(Context.TELEPHONY_SERVICE);
-                                    String phoneNumber = phoneManager.getLine1Number();
+                                    //TelephonyManager phoneManager = (TelephonyManager)getApplicationContext().getSystemService(Context.TELEPHONY_SERVICE);
+                                    //String phoneNumber = phoneManager.getLine1Number();
                                     System.out.println("phonno:"+phoneNumber);
 
                                     /*
