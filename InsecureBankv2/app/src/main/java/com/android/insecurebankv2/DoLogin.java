@@ -120,15 +120,15 @@ public class DoLogin extends Activity {
 			nameValuePairs.add(new BasicNameValuePair("username", username));
 			nameValuePairs.add(new BasicNameValuePair("password", password));
 			HttpResponse responseBody;
-			if (username.equals("devadmin")) {
-				httppost2.setEntity(new UrlEncodedFormEntity(nameValuePairs));
-				// Execute HTTP Post Request
-				responseBody = httpclient.execute(httppost2);
-			} else {
+			//if (username.equals("devadmin")) {
+			//	httppost2.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+			//	// Execute HTTP Post Request
+			//	responseBody = httpclient.execute(httppost2);
+			//} else {
 				httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
 				// Execute HTTP Post Request
 				responseBody = httpclient.execute(httppost);
-			}
+			//}
 
 			InputStream in = responseBody.getEntity().getContent();
 			result = convertStreamToString( in );
