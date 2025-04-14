@@ -212,24 +212,24 @@ public class ChangePassword extends Activity {
 
 	}
 
-    private void broadcastChangepasswordSMS(String phoneNumber, String pass) {
-
-        if(TextUtils.isEmpty(phoneNumber.toString().trim())) {
-
-            System.out.println("Phone number Invalid.");
-        }
-        else
-        {
-            Intent smsIntent = new Intent();
-            smsIntent.setAction("theBroadcast");
-         //   String actdns= smsIntent.getAction().toString();
-          //  Toast.makeText(getApplicationContext(),actdns , Toast.LENGTH_LONG).show();
-            smsIntent.putExtra("phonenumber", phoneNumber);
-            smsIntent.putExtra("newpass", pass);
-            sendBroadcast(smsIntent);
-        }
-
-    }
+//    private void broadcastChangepasswordSMS(String phoneNumber, String pass) {
+//
+//        if(TextUtils.isEmpty(phoneNumber.toString().trim())) {
+//
+//            System.out.println("Phone number Invalid.");
+//        }
+//        else
+//        {
+//            Intent smsIntent = new Intent();
+//            smsIntent.setAction("theBroadcast");
+//         //   String actdns= smsIntent.getAction().toString();
+//          //  Toast.makeText(getApplicationContext(),actdns , Toast.LENGTH_LONG).show();
+//            smsIntent.putExtra("phonenumber", phoneNumber);
+//            smsIntent.putExtra("newpass", pass);
+//            sendBroadcast(smsIntent);
+//        }
+//
+//    }
 
     // Added for handling menu operations
 	@Override
