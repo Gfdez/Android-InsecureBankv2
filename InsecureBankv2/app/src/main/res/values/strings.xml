@@ -20,7 +20,7 @@
     <string name="title_activity_wrong_login">WrongLogin</string>
     <string name="title_activity_do_transfer">DoTransfer</string>
     <string name="title_activity_view_statement">ViewStatement</string>
-    //<string name="is_admin">no</string>
+    <!--string name="is_admin">no</string-->
     <string name="title_activity_change_password">ChangePassword</string>
     <string name="title_activity_exit">ExitActivity</string>
     <string name="action_kill">Exit Application</string>
