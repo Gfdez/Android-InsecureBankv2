@@ -73,14 +73,14 @@
             android:exported="false" >
         </provider>
 
-        <receiver
+        <!--receiver
             android:name=".MyBroadCastReceiver"
             android:exported="false" >
             <intent-filter>
                 <action android:name="theBroadcast" >
                 </action>
             </intent-filter>
-        </receiver>
+        </receiver-->
 
         <activity
             android:name=".ChangePassword"
